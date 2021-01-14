@@ -53,7 +53,7 @@ def login():
     
     os.system('git pull')
     
-    print(f'{bcolors.BOLD+bcolors.OKBLUE}We use Github [using `git push`] for login and USC Email for recording login events')
+    print(f'{bcolors.BOLD+bcolors.OKBLUE}We use Github [using `git push (--dry-run?)`] for login and USC Email for recording login events')
     while True:
         print(f"{bcolors.WARNING+bcolors.BOLD}Email (@usc.edu): ",end=f'{bcolors.ENDC}')
         uscemail = input().strip()
@@ -62,13 +62,13 @@ def login():
 
         else: break
 
-    logtime = datetime.datetime.utcnow().isoformat()
+    logtime = datetime.datetime.utcnow().isoformat().split('.')[0]
     
     logtext = f"\n- @{logtime}\t{uscemail}"
     
     logEvent(logtext)
 
-    os.system('git add log.txt')
+    os.system('git add README.md')
     os.system('git commit -m "{logtext}"')
     cmdstatus = os.system('git push')
     
