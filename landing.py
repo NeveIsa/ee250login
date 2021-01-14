@@ -49,7 +49,7 @@ def logEvent(text,logfile='',raw=False):
     logtime = datetime.datetime.utcnow().isoformat().split('.')[0]
     PI_USER = os.environ['USER']
 
-    if logfile='':
+    if logfile=='':
         logfile = f'{PI_USER}_fails.md'
 
     with open(logfile,'a+') as g:
