@@ -2,7 +2,6 @@
 
 import os,sys,datetime,time,signal
 logfile = 'README.md'
-
 #https://stackoverflow.com/questions/287871/how-to-print-colored-text-to-the-terminal
 class bcolors:
     HEADER = '\033[95m'
@@ -45,13 +44,19 @@ failedloginmsg=f"""
 {bcolors.WARNING+bcolors.BOLD} Login Failed! This event has been recored.
 """
 
-def logEvent(text):
+def logEvent(text,raw=False):
+    logtime = datetime.datetime.utcnow().isoformat().split('.')[0]
+    PI_USER = os.environ['USER']
     with open(logfile,'a+') as g:
-        g.write(text)
+        if raw:
+            g.write(text)
+        else:
+            g.write(f'\n- {logtime} | {PI_USER} -> {text}')
 
 def login():
-    
-    os.system('git pull')
+    logEvent('\n',raw=True) # add an extra newline
+
+    os.system('git pull') #needed synchronise between login of diff users
     
     print(f'{bcolors.BOLD+bcolors.OKBLUE}We use Github [using `git push (--dry-run?)`] for login and USC Email for recording login events')
     while True:
@@ -60,33 +65,30 @@ def login():
         if uscemail=='' or (not uscemail.endswith('@usc.edu')):
             continue
 
-        else: break
-
-    logtime = datetime.datetime.utcnow().isoformat().split('.')[0]
+        else: break 
     
-    logtext = f"\n- @{logtime}\t{uscemail}"
-    
-    logEvent(logtext)
+    logEvent(uscemail) #log
 
     os.system('git add README.md')
     os.system('git commit -m "{logtext}"')
     cmdstatus = os.system('git push')
     
     if(cmdstatus==0):
+        logEvent('github login success')
         print(intro)
-        os.system('bash')
+        os.system('cd ~ && bash')
         print(outro)
         time.sleep(3)
         sys.exit(0)
     else:
-        logEvent('(FAILED)')
+        logEvent('github login failed')
         print(failedloginmsg)
         time.sleep(3)
         sys.exit(-1)
 
 def signal_handler(sig, frame):
     logtime = datetime.datetime.utcnow().isoformat()
-    logEvent(f"\n- @{logtime}\t*SIGINT*")
+    logEvent(f"SIGINT")
     print(f"\n\n{bcolors.WARNING+bcolors.BOLD}INTERRUPT -> This event has been logged.")
     time.sleep(3)
     sys.exit(-2)
