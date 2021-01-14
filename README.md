@@ -7,3 +7,6 @@
 - @2021-01-14T03:57:48.010524	*SIGINT*
 
 - 2021-01-14T04:10:13 | pi -> sbmohant@usc.edu
+- 2021-01-14T04:10:19 | pi -> github login failed
+
+- 2021-01-14T04:10:45 | pi -> sbmohant@usc.edu
