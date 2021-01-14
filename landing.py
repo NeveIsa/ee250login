@@ -74,7 +74,7 @@ def login():
     
     logEvent(uscemail) #log
 
-    os.system('git add README.md')
+    os.system('git add *.md')
     os.system('git commit -m "{logtext}"')
     cmdstatus = os.system('git push')
     
