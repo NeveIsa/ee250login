@@ -1,7 +1,8 @@
 #!/bin/python3
 
 import os,sys,datetime,time,signal
-logfile = 'README.md'
+successlogfile = 'README.md'
+
 #https://stackoverflow.com/questions/287871/how-to-print-colored-text-to-the-terminal
 class bcolors:
     HEADER = '\033[95m'
@@ -44,9 +45,13 @@ failedloginmsg=f"""
 {bcolors.WARNING+bcolors.BOLD} Login Failed! This event has been recored.
 """
 
-def logEvent(text,raw=False):
+def logEvent(text,logfile='',raw=False):
     logtime = datetime.datetime.utcnow().isoformat().split('.')[0]
     PI_USER = os.environ['USER']
+
+    if logfile='':
+        logfile = f'{PI_USER}_fails.md'
+
     with open(logfile,'a+') as g:
         if raw:
             g.write(text)
@@ -74,7 +79,7 @@ def login():
     cmdstatus = os.system('git push')
     
     if(cmdstatus==0):
-        logEvent('github login success')
+        logEvent(f'{uscemail} login succeeded',successlogfile)
         print(intro)
         os.system('cd ~ && bash')
         print(outro)
